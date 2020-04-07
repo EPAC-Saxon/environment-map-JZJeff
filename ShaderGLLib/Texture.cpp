@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include <GL/glew.h>
+#include <assert.h>
 #include "Image.h"
 
 namespace sgl {
@@ -11,7 +12,26 @@ namespace sgl {
 		pixel_element_size_(pixel_element_size),
 		pixel_structure_(pixel_structure)
 	{
-#pragma message ("You have to complete this code!")
+		Image img(file, pixel_element_size_, pixel_structure_);
+		size_ = img.GetSize();
+		glGenTextures(1, &texture_id_);
+		glBindTexture(GL_TEXTURE_2D, texture_id_);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			ConvertToGLType(pixel_element_size_, pixel_structure_),
+			static_cast<GLsizei>(size_.first),
+			static_cast<GLsizei>(size_.second),
+			0,
+			ConvertToGLType(pixel_structure_),
+			ConvertToGLType(pixel_element_size_),
+			img.Data());
+		glGenerateMipmap(GL_TEXTURE_2D);
+
 	}
 
 	Texture::~Texture()
@@ -116,11 +136,34 @@ namespace sgl {
 		Texture(pixel_element_size, pixel_structure)
 	{
 #pragma message ("You have to complete this code!")
+		for (int i = 0; i <= 6; i++) {
+			Image img(cube_file[i], pixel_element_size_, pixel_structure_);
+			size_ = img.GetSize();
+
+			glTexImage2D(
+				GL_TEXTURE_CUBE_MAP,
+				0,
+				ConvertToGLType(pixel_element_size_, pixel_structure_),
+				static_cast<GLsizei>(size_.first),
+				static_cast<GLsizei>(size_.second),
+				0,
+				ConvertToGLType(pixel_structure_),
+				ConvertToGLType(pixel_element_size_),
+				img.Data());
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		}
 	}
 
 	void TextureCubeMap::CreateCubeMap()
 	{
 #pragma message ("You have to complete this code!")
+		glGenTextures(1, &texture_id_);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
 } // End namespace sgl.
