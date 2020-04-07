@@ -57,19 +57,13 @@ namespace sgl {
 		const std::string& name, 
 		const glm::vec2& vec2) const
 	{
-#pragma message ("You have to complete this code!")
-
-		glUniform2f(
-			glGetUniformLocation(program_id_, name.c_str()), vec2.x, vec2.y);
-
+		glUniform2f(glGetUniformLocation(program_id_, name.c_str()), vec2.x, vec2.y);
 	}
 
 	void Program::UniformVector3(
 		const std::string& name, 
 		const glm::vec3& vec3) const
 	{
-#pragma message ("You have to complete this code!")
-
 		glUniform3f(
 			glGetUniformLocation(program_id_, name.c_str()),
 			vec3.x,
@@ -81,7 +75,6 @@ namespace sgl {
 		const std::string& name, 
 		const glm::vec4& vec4) const
 	{
-
 		glUniform4f(
 			glGetUniformLocation(program_id_, name.c_str()),
 			vec4.x,
@@ -118,12 +111,10 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-#pragma message ("You have to complete this code!")
-
-		auto program_ = std::make_shared<Program>();
+		std::shared_ptr<sgl::Program> program_ = std::make_shared<Program>();
 		
-		Shader vertex_shader(ShaderType::VERTEX_SHADER);
-		if (!vertex_shader.LoadFromFile("../Asset/SimpleVertex.glsl"))
+		sgl::Shader vertex_shader(ShaderType::VERTEX_SHADER);
+		if (!vertex_shader.LoadFromFile("../Asset/Simple.Vertex.glsl"))
 		{
 			std::cout << "can't read vertex sahder" << std::endl;
 			exit(-1);
@@ -131,18 +122,23 @@ namespace sgl {
 		
 		program_->AddShader(vertex_shader);
 
-		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
-		if (!fragement_shader.LoadFromFile("../Asset/SimpleFragment.glsl"))
+		sgl::Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
+		if (!fragement_shader.LoadFromFile("../Asset/Simple.Fragment.glsl"))
 		{
-			std::cout << "can't read vertex sahder" << std::endl;
+			std::cout << "can't read vertex Fragment" << std::endl;
 			exit(-1);
 		}
 		program_->AddShader(fragement_shader);
-
 		program_->LinkShader();
 		program_->Use();
 
-		return nullptr;
+
+		program_->UniformMatrix("projection", projection);
+		program_->UniformMatrix("view", view);
+		program_->UniformMatrix("model", model);
+
+
+		return program_;
 	}
 
 	std::shared_ptr<sgl::Program> CreateCubeMapProgram(
@@ -150,8 +146,33 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-#pragma message ("You have to complete this code!")
-		return nullptr;
+		auto program_ = std::make_shared<Program>();
+
+		Shader vertex_shader(ShaderType::VERTEX_SHADER);
+		if (!vertex_shader.LoadFromFile("../Asset/CubeMap.Vertex.glsl"))
+		{
+			std::cout << "can't read vertex sahder" << std::endl;
+			exit(-1);
+		}
+
+		program_->AddShader(vertex_shader);
+
+		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
+		if (!fragement_shader.LoadFromFile("../Asset/CubeMap.Fragment.glsl"))
+		{
+			std::cout << "can't read vertex Fragment" << std::endl;
+			exit(-1);
+		}
+		program_->AddShader(fragement_shader);
+		program_->LinkShader();
+		program_->Use();
+
+
+		program_->UniformMatrix("projection", projection);
+		program_->UniformMatrix("view", view);
+		program_->UniformMatrix("model", model);
+
+		return program_;
 	}
 
 	std::shared_ptr<sgl::Program> CreatePBRProgram(
@@ -159,8 +180,33 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-#pragma message ("You have to complete this code!")
-		return nullptr;
+		auto program_ = std::make_shared<Program>();
+
+		Shader vertex_shader(ShaderType::VERTEX_SHADER);
+		if (!vertex_shader.LoadFromFile("../Asset/PBR.Vertex.glsl"))
+		{
+			std::cout << "can't read vertex sahder" << std::endl;
+			exit(-1);
+		}
+
+		program_->AddShader(vertex_shader);
+
+		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
+		if (!fragement_shader.LoadFromFile("../Asset/PBR.Fragment.glsl"))
+		{
+			std::cout << "can't read vertex Fragment" << std::endl;
+			exit(-1);
+		}
+		program_->AddShader(fragement_shader);
+		program_->LinkShader();
+		program_->Use();
+
+
+		program_->UniformMatrix("projection", projection);
+		program_->UniformMatrix("view", view);
+		program_->UniformMatrix("model", model);
+
+		return program_;
 	}
 
 } // End namespace sgl.
