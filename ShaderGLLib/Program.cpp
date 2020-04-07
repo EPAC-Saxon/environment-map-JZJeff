@@ -1,5 +1,6 @@
 #include "Program.h"
 #include <stdexcept>
+#include <iostream>
 
 namespace sgl {
 
@@ -57,6 +58,10 @@ namespace sgl {
 		const glm::vec2& vec2) const
 	{
 #pragma message ("You have to complete this code!")
+
+		glUniform2f(
+			glGetUniformLocation(program_id_, name.c_str()), vec2.x, vec2.y);
+
 	}
 
 	void Program::UniformVector3(
@@ -64,13 +69,25 @@ namespace sgl {
 		const glm::vec3& vec3) const
 	{
 #pragma message ("You have to complete this code!")
+
+		glUniform3f(
+			glGetUniformLocation(program_id_, name.c_str()),
+			vec3.x,
+			vec3.y,
+			vec3.z);
 	}
 
 	void Program::UniformVector4(
 		const std::string& name, 
 		const glm::vec4& vec4) const
 	{
-#pragma message ("You have to complete this code!")
+
+		glUniform4f(
+			glGetUniformLocation(program_id_, name.c_str()),
+			vec4.x,
+			vec4.y,
+			vec4.z,
+			vec4.w);
 	}
 
 	void Program::UniformMatrix(
@@ -78,7 +95,11 @@ namespace sgl {
 		const glm::mat4& mat,
 		const bool transpose /*= false*/) const
 	{
-#pragma message ("You have to complete this code!")
+		glUniformMatrix4fv(
+			glGetUniformLocation(GetMemoizeUniformLocation(name), name.c_str()),
+			1,
+			transpose ? GL_TRUE : GL_FALSE,
+			&mat[0][0]);
 	}
 
 	const int Program::GetMemoizeUniformLocation(const std::string& name) const
@@ -98,6 +119,29 @@ namespace sgl {
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
 #pragma message ("You have to complete this code!")
+
+		auto program_ = std::make_shared<Program>();
+		
+		Shader vertex_shader(ShaderType::VERTEX_SHADER);
+		if (!vertex_shader.LoadFromFile("../Asset/SimpleVertex.glsl"))
+		{
+			std::cout << "can't read vertex sahder" << std::endl;
+			exit(-1);
+		}
+		
+		program_->AddShader(vertex_shader);
+
+		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
+		if (!fragement_shader.LoadFromFile("../Asset/SimpleFragment.glsl"))
+		{
+			std::cout << "can't read vertex sahder" << std::endl;
+			exit(-1);
+		}
+		program_->AddShader(fragement_shader);
+
+		program_->LinkShader();
+		program_->Use();
+
 		return nullptr;
 	}
 
