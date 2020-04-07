@@ -12,13 +12,13 @@ namespace sgl {
 		{
 		case sgl::PixelElementSize::BYTE:
 			return GL_UNSIGNED_BYTE;
-			break;
+		
 		case sgl::PixelElementSize::SHORT:
 			return GL_UNSIGNED_SHORT;
-			break;
+		
 		case sgl::PixelElementSize::LONG:
 			return GL_FLOAT;
-			break;
+		
 		}
 	}
 
@@ -28,20 +28,15 @@ namespace sgl {
 		{
 		case sgl::PixelStructure::GREY:
 			return GL_RED;
-			break;
+
 		case sgl::PixelStructure::GREY_ALPHA:
 			return GL_RG;
-			break;
+		
 		case sgl::PixelStructure::RGB:
 			return GL_RGB;
-			break;
+	
 		case sgl::PixelStructure::RGB_ALPHA:
 			return GL_RGBA;
-			break;
-		default:
-			break;
-			std::cout << "value 0 in convertype pixel structure" << std::endl;
-			return 0;
 		}
 	}
 

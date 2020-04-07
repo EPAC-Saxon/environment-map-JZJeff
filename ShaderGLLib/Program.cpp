@@ -57,7 +57,7 @@ namespace sgl {
 		const std::string& name, 
 		const glm::vec2& vec2) const
 	{
-		glUniform2f(glGetUniformLocation(program_id_, name.c_str()), vec2.x, vec2.y);
+		glUniform2f(GetMemoizeUniformLocation(name), vec2.x, vec2.y);
 	}
 
 	void Program::UniformVector3(
@@ -65,7 +65,7 @@ namespace sgl {
 		const glm::vec3& vec3) const
 	{
 		glUniform3f(
-			glGetUniformLocation(program_id_, name.c_str()),
+			GetMemoizeUniformLocation(name), 
 			vec3.x,
 			vec3.y,
 			vec3.z);
@@ -76,7 +76,7 @@ namespace sgl {
 		const glm::vec4& vec4) const
 	{
 		glUniform4f(
-			glGetUniformLocation(program_id_, name.c_str()),
+			GetMemoizeUniformLocation(name),
 			vec4.x,
 			vec4.y,
 			vec4.z,
@@ -89,7 +89,7 @@ namespace sgl {
 		const bool transpose /*= false*/) const
 	{
 		glUniformMatrix4fv(
-			glGetUniformLocation(GetMemoizeUniformLocation(name), name.c_str()),
+			GetMemoizeUniformLocation(name),
 			1,
 			transpose ? GL_TRUE : GL_FALSE,
 			&mat[0][0]);
@@ -111,16 +111,15 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-		std::shared_ptr<sgl::Program> program_ = std::make_shared<Program>();
+		std::shared_ptr<sgl::Program> program = std::make_shared<Program>();
 		
 		sgl::Shader vertex_shader(ShaderType::VERTEX_SHADER);
 		if (!vertex_shader.LoadFromFile("../Asset/Simple.Vertex.glsl"))
 		{
-			std::cout << "can't read vertex sahder" << std::endl;
+			std::cout << "can't read vertex shader" << std::endl;
 			exit(-1);
 		}
-		
-		program_->AddShader(vertex_shader);
+		program->AddShader(vertex_shader);
 
 		sgl::Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
 		if (!fragement_shader.LoadFromFile("../Asset/Simple.Fragment.glsl"))
@@ -128,17 +127,19 @@ namespace sgl {
 			std::cout << "can't read vertex Fragment" << std::endl;
 			exit(-1);
 		}
-		program_->AddShader(fragement_shader);
-		program_->LinkShader();
-		program_->Use();
+		program->AddShader(fragement_shader);
 
 
-		program_->UniformMatrix("projection", projection);
-		program_->UniformMatrix("view", view);
-		program_->UniformMatrix("model", model);
+		program->LinkShader();
+		program->Use();
 
 
-		return program_;
+		program->UniformMatrix("projection", projection);
+		program->UniformMatrix("view", view);
+		program->UniformMatrix("model", model);
+
+
+		return program;
 	}
 
 	std::shared_ptr<sgl::Program> CreateCubeMapProgram(
@@ -146,7 +147,7 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-		auto program_ = std::make_shared<Program>();
+		std::shared_ptr<sgl::Program> program = std::make_shared<Program>();
 
 		Shader vertex_shader(ShaderType::VERTEX_SHADER);
 		if (!vertex_shader.LoadFromFile("../Asset/CubeMap.Vertex.glsl"))
@@ -155,7 +156,7 @@ namespace sgl {
 			exit(-1);
 		}
 
-		program_->AddShader(vertex_shader);
+		program->AddShader(vertex_shader);
 
 		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
 		if (!fragement_shader.LoadFromFile("../Asset/CubeMap.Fragment.glsl"))
@@ -163,16 +164,16 @@ namespace sgl {
 			std::cout << "can't read vertex Fragment" << std::endl;
 			exit(-1);
 		}
-		program_->AddShader(fragement_shader);
-		program_->LinkShader();
-		program_->Use();
+		program->AddShader(fragement_shader);
+		program->LinkShader();
+		program->Use();
 
 
-		program_->UniformMatrix("projection", projection);
-		program_->UniformMatrix("view", view);
-		program_->UniformMatrix("model", model);
+		program->UniformMatrix("projection", projection);
+		program->UniformMatrix("view", view);
+		program->UniformMatrix("model", model);
 
-		return program_;
+		return program;
 	}
 
 	std::shared_ptr<sgl::Program> CreatePBRProgram(
@@ -180,7 +181,7 @@ namespace sgl {
 		const glm::mat4& view /*= glm::mat4(1.0f)*/,
 		const glm::mat4& model /*= glm::mat4(1.0f)*/)
 	{
-		auto program_ = std::make_shared<Program>();
+		std::shared_ptr<sgl::Program> program = std::make_shared<Program>();
 
 		Shader vertex_shader(ShaderType::VERTEX_SHADER);
 		if (!vertex_shader.LoadFromFile("../Asset/PBR.Vertex.glsl"))
@@ -189,7 +190,7 @@ namespace sgl {
 			exit(-1);
 		}
 
-		program_->AddShader(vertex_shader);
+		program->AddShader(vertex_shader);
 
 		Shader fragement_shader(ShaderType::FRAGMENT_SHADER);
 		if (!fragement_shader.LoadFromFile("../Asset/PBR.Fragment.glsl"))
@@ -197,16 +198,16 @@ namespace sgl {
 			std::cout << "can't read vertex Fragment" << std::endl;
 			exit(-1);
 		}
-		program_->AddShader(fragement_shader);
-		program_->LinkShader();
-		program_->Use();
+		program->AddShader(fragement_shader);
+		program->LinkShader();
+		program->Use();
 
 
-		program_->UniformMatrix("projection", projection);
-		program_->UniformMatrix("view", view);
-		program_->UniformMatrix("model", model);
+		program->UniformMatrix("projection", projection);
+		program->UniformMatrix("view", view);
+		program->UniformMatrix("model", model);
 
-		return program_;
+		return program;
 	}
 
 } // End namespace sgl.

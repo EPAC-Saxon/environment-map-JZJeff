@@ -14,10 +14,12 @@ namespace sgl {
 	{
 		Image img(file, pixel_element_size_, pixel_structure_);
 		size_ = img.GetSize();
+
 		glGenTextures(1, &texture_id_);
 		glBindTexture(GL_TEXTURE_2D, texture_id_);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(
@@ -135,13 +137,14 @@ namespace sgl {
 		const PixelStructure pixel_structure /*= PixelStructure::RGB_ALPHA*/) :
 		Texture(pixel_element_size, pixel_structure)
 	{
-#pragma message ("You have to complete this code!")
-		for (int i = 0; i <= 6; i++) {
+		CreateCubeMap();
+
+		for (int i = 0; i < 6; i++) {
 			Image img(cube_file[i], pixel_element_size_, pixel_structure_);
 			size_ = img.GetSize();
 
 			glTexImage2D(
-				GL_TEXTURE_CUBE_MAP,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 				0,
 				ConvertToGLType(pixel_element_size_, pixel_structure_),
 				static_cast<GLsizei>(size_.first),
@@ -156,7 +159,6 @@ namespace sgl {
 
 	void TextureCubeMap::CreateCubeMap()
 	{
-#pragma message ("You have to complete this code!")
 		glGenTextures(1, &texture_id_);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
